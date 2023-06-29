@@ -41,6 +41,10 @@ const Voting = () => {
   const [selectedPoll, setSelectedPoll] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
 
+  const [loadingSubmit, setLoadingSubmit] = useState(false)
+
+  const [loadingVote, setLoadingVote] = useState(false)
+
 
   const toast = useToast();
 
@@ -50,6 +54,7 @@ const Voting = () => {
   };
 
   const handleVote = async () => {
+    setLoadingVote(true)
     if (selectedOption === null) {
       toast({
         title: 'Error',
@@ -58,9 +63,11 @@ const Voting = () => {
         duration: 3000,
         isClosable: true,
       });
+
+      setLoadingVote(false)
       return;
     }
-
+    
     try {
       // Call the vote function from the contract
       console.log(selectedPoll.id, account, selectedOption[0])
@@ -85,6 +92,8 @@ const Voting = () => {
         isClosable: true,
       });
     }
+
+    setLoadingVote(false)
   };
 
   const fetchPolls = async () => {
@@ -144,6 +153,7 @@ const fetchPollsData = async (pollsCount, completed) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingSubmit(true)
     try {
 
       await createPoll();
@@ -169,6 +179,8 @@ const fetchPollsData = async (pollsCount, completed) => {
         isClosable: true,
       });
     }
+
+    setLoadingSubmit(false)
   };
 
   const handleTabsChange = (index) => {
@@ -428,7 +440,9 @@ const fetchPollsData = async (pollsCount, completed) => {
                   </VStack>
                 </ModalBody>
                 <ModalFooter>
-                  <Button type="submit" colorScheme="teal" onClick={handleSubmit}>
+                  <Button type="submit" colorScheme="teal" onClick={handleSubmit}
+                  isLoading={loadingSubmit}
+                  loadingText="Handling Process">
                     Submit Poll
                   </Button>
                 </ModalFooter>
@@ -481,7 +495,7 @@ const fetchPollsData = async (pollsCount, completed) => {
 
 
     <ModalFooter>
-      <Button colorScheme="blue" onClick={handleVote} mr={3}>
+      <Button colorScheme="blue" onClick={handleVote} mr={3} isLoading={loadingVote} loadingText="Handling Vote">
         Vote
       </Button>
     </ModalFooter>

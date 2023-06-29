@@ -24,6 +24,7 @@ import KubixButton from "@/components/userPage/KubixButton";
 import DeployMenu from "@/components/userPage/DeployMenu";
 import MintMenu from "@/components/userPage/MintMenu";
 import DataMenu from "@/components/userPage/DataMenu";
+import { set } from "lodash";
 
 const glassLayerStyle = {
   position: "absolute",
@@ -50,7 +51,7 @@ const User = () => {
 
 
 
-  const [phrase,setPhrase]=useState("Join");
+  const [loading,setLoading]=useState(false);
 
   const { userDetails, fetchUserDetails, addUserData } = useDataBaseContext();
   const{hasMemberNFT, execNftBalance,balance,nftBalance, fetchBalance,web3, account,kubiMembershipNFTContract, contract,KUBIXbalance, kubiMembershipNFTAddress}=useWeb3Context();
@@ -104,9 +105,9 @@ const User = () => {
 
 
   const handleJoin = async (e) => {
-    setPhrase("Joining...");
+    
     setShowMetaMaskMessage(true);
-    e.target.disabled = true;
+    setLoading(true)
   
     if (web3 && account) {
       const networkId = await web3.eth.net.getId();
@@ -119,8 +120,7 @@ const User = () => {
           duration: 5000,
           isClosable: true,
         });
-        setPhrase("Join");
-        e.target.disabled = false;
+        setLoading(false)
         return;
       }
     }
@@ -133,8 +133,7 @@ const User = () => {
         duration: 5000,
         isClosable: true,
       });
-      setPhrase("Join");
-      e.target.disabled = false;
+      setLoading(false)
       return;
     }
   
@@ -148,8 +147,7 @@ const User = () => {
           duration: 5000,
           isClosable: true,
         });
-        setPhrase("Join");
-        e.target.disabled = false;
+        setLoading(false)
         return;
       }
   
@@ -169,8 +167,7 @@ const User = () => {
         duration: 5000,
         isClosable: true,
       });
-      setPhrase("Join");
-      e.target.disabled = false;
+      setLoading(false)
       return;
     }
   
@@ -194,8 +191,7 @@ const User = () => {
         duration: 5000,
         isClosable: true,
       });
-      setPhrase("Join");
-      e.target.disabled = false;
+      setLoading(false)
       return;
     }
   
@@ -302,8 +298,11 @@ const User = () => {
               <FormLabel>Username</FormLabel>
               <Input type="text" placeholder="Username" value={username} onChange={(event) => setUsername(event.target.value)} />
             </FormControl>
-            <Button colorScheme="blue" mt={6} onClick={handleJoin} _hover={{ bg: "blue.600", boxShadow: "md", transform: "scale(1.05)"}}>
-              {phrase}
+            <Button colorScheme="blue" mt={6} onClick={handleJoin} _hover={{ bg: "blue.600", boxShadow: "md", transform: "scale(1.05)"}}
+            isLoading={loading}
+            loadingText="Joining"
+            >
+              Join
             </Button>
             {showMetaMaskMessage && (
               <Text fontSize="xl" fontWeight="bold" color="red.500" mt={4}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { use, useState } from 'react';
 import {
   Button,
   FormControl,
@@ -23,9 +23,13 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
   const [difficulty, setDifficulty] = useState('easy');
   const [estHours, setEstHours] = useState(.5);
 
+  const [loading,setLoading] = useState(false)
+
   const toast = useToast();
 
   const handleSubmit = () => {
+
+    setLoading(true)
     onAddTask({ name, description, difficulty, estHours });
 
     // Show a toast notification when a task is successfully added
@@ -37,6 +41,7 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
       isClosable: true,
     });
 
+    setLoading(false)
     setDescription('');
     setName('');
     setDifficulty('easy');
@@ -109,7 +114,9 @@ const AddTaskModal = ({ isOpen, onClose, onAddTask }) => {
           </VStack>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
+          <Button colorScheme="blue" mr={3} onClick={handleSubmit}
+          isLoading={loading}
+          loadingText="Adding Task">
             Add Task
           </Button>
           <Button variant="ghost" onClick={onClose}>

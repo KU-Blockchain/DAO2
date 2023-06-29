@@ -39,6 +39,7 @@ const ballStyle = {
 const Home = () => {
   return (
     
+    
     <VStack spacing={10} style={{ position: 'relative' }}>
       
     <Box style={waveBackgroundStyle}>
